@@ -9,3 +9,6 @@ variable "app" {
 
 variable "number_of_subnets_required" {
 }
+
+variable "REGION" {
+}
