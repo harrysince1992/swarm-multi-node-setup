@@ -10,4 +10,5 @@ module "module-vpc-3tier" {
   secret_key = var.secret_key
   app = var.app
   number_of_subnets_required = var.number_of_subnets_required
+  REGION = var.REGION
 }
