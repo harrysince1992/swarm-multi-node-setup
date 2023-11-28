@@ -17,12 +17,12 @@ resource "aws_instance" "swarm-manager" {
 }
 
 
-# Bastion host EC2 instance
+# Bastion host EC2 instance; Also acts as ansible controller
 resource "aws_instance" "bastion-host" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.ec2_instance_type
   subnet_id     = module.module-vpc-3tier.public_subnet_ids[0]
-
+  user_data = file("${path.module}/user-data-ansible.sh")
   security_groups = [aws_security_group.bastion-sg.id]
   key_name = aws_key_pair.keypair.key_name
 
