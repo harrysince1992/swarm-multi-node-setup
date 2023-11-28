@@ -27,14 +27,14 @@ resource "aws_security_group" "bastion-sg" {
 resource "aws_security_group" "swarm-sg" {
   vpc_id = module.module-vpc-3tier.vpc_id
 
-  dynamic "ports" {
+  dynamic "swarm-ports" {
     for_each = local.swarm_nw_ports
 
     content {
       ingress {
         description = "allow swarm ports within n/w"
-        from_port   = ports.key
-        to_port     = ports.key
+        from_port   = swarm-ports.key
+        to_port     = swarm-ports.key
         protocol    = "tcp"
         self        = true
       }
