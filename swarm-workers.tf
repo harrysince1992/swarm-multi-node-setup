@@ -7,6 +7,7 @@ resource "aws_instance" "worker" {
   instance_type   = var.ec2_instance_type
   subnet_id       = local.subnets_dev[count.index]
   security_groups = [aws_security_group.swarm-sg.id]
+  user_data = file("${path.module/user-data.sh}")
   tags = {
     Name = "${var.app}-worker-${count.index + 1}-${terraform.workspace}"
     env  = local.env

@@ -7,6 +7,7 @@ resource "aws_instance" "swarm-manager" {
   count           = 1
   subnet_id       = module.module-vpc-3tier.private_subnet_ids[0]
   security_groups = [aws_security_group.swarm-sg.id]
+  user_data = file("${path.module/user-data.sh}")
 
   tags = {
     Name = "${var.app}-manager-${terraform.workspace}"
