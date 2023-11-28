@@ -26,16 +26,16 @@ resource "aws_security_group" "bastion-sg" {
 
 resource "aws_security_group" "swarm-sg" {
   vpc_id = module.module-vpc-3tier.vpc_id
-
+  name   = "${var.app}-swarm-sg-${terraform.workspace}"
   dynamic "ingress" {
     for_each = local.swarm_nw_ports
 
     content {
-        description = "allow swarm ports within n/w"
-        from_port   = ingress.value
-        to_port     = ingress.value
-        protocol    = "tcp"
-        self        = true
+      description = "allow swarm ports within n/w"
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      self        = true
     }
   }
 
@@ -44,7 +44,7 @@ resource "aws_security_group" "swarm-sg" {
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
-    security_groups = [aws_security_group.bastion-sg]
+    security_groups = [aws_security_group.bastion-sg.name]
 
   }
 
@@ -58,6 +58,5 @@ resource "aws_security_group" "swarm-sg" {
   tags = {
     Name = "${var.app}-swarm-sg-${terraform.workspace}"
   }
-
 
 }
