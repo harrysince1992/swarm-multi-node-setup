@@ -1,7 +1,7 @@
 # Security groups for bastion host, swarm manager and worker nodes
 
 resource "aws_security_group" "bastion-sg" {
-  name   = "${var.app}-bastion-host-sg-${terraform.workspace}"
+  name   = "${var.app}-${terraform.workspace}-bastion-host-sg"
   vpc_id = module.module-vpc-3tier.vpc_id
 
   ingress {
@@ -20,13 +20,13 @@ resource "aws_security_group" "bastion-sg" {
   }
 
   tags = {
-    Name = "${var.app}-bastion-host-sg-${terraform.workspace}"
+    Name = "${var.app}-${terraform.workspace}-bastion-host-sg"
   }
 }
 
 resource "aws_security_group" "swarm-sg" {
   vpc_id = module.module-vpc-3tier.vpc_id
-  name   = "${var.app}-swarm-sg-${terraform.workspace}"
+  name   = "${var.app}-${terraform.workspace}-swarm-sg"
   dynamic "ingress" {
     for_each = local.swarm_nw_ports
 
@@ -56,7 +56,7 @@ resource "aws_security_group" "swarm-sg" {
   }
 
   tags = {
-    Name = "${var.app}-swarm-sg-${terraform.workspace}"
+    Name = "${var.app}-${terraform.workspace}-swarm-sg"
   }
 
 }
