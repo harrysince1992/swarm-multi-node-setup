@@ -7,7 +7,7 @@ locals {
   # For prod, we have to create a dynamic map that can deploy managers and workers in different subnets or AZs
   # For dev, only 1 manager node and 2 worker nodes 
   # if list with 3 subnet IDs come, slice it get first 2 subnetIDs to deploy our worker nodes to, else keep it same
-  subnets_dev = slice(module.module-vpc-3tier.private_subnet_ids, 0, 1)
+  subnets_dev = slice(module.module-vpc-3tier.private_subnet_ids, 0, 2)
 }
 
 # first we will create vpc setup with the help of our custom module
