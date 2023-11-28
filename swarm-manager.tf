@@ -16,7 +16,6 @@ resource "aws_instance" "swarm-manager" {
   }
 }
 
-
 # Bastion host EC2 instance; Also acts as ansible controller
 resource "aws_instance" "bastion-host" {
   ami           = data.aws_ami.ubuntu.id
@@ -26,9 +25,37 @@ resource "aws_instance" "bastion-host" {
   security_groups = [aws_security_group.bastion-sg.id]
   key_name = aws_key_pair.keypair.key_name
 
+  connection {
+    type     = "ssh"
+    user     = "ubuntu"
+    private_key = var.private_key
+    host     = self.public_ip
+  }
+
+  provisioner "file" {
+    source = "${path.module}/swarm-inventory.ini"
+    destination = "/home/ubuntu/swarm-inventory.ini"
+  }
+
   tags = {
     Name = "${var.app}-bastion-host-${terraform.workspace}"
     env  = local.env
   }
 
+}
+
+# Ansible inventory file to create for swarm manager and worker nodes
+resource "local_file" "inventory" {
+  filename = "swarm-inventory.ini"
+  content = <<EOF
+  [swarm_hosts:children]
+  swarm_manager
+  swarm_workers
+  [swarm_manager]
+  ${aws_instance.swarm-manager[0].private_ip}
+  [swarm_workers]
+  ${aws_instance.worker[0].private_ip}
+  ${aws_instance.worker[1].private_ip}
+  EOF 
+  depends_on = [ aws_instance.bastion-host ]
 }

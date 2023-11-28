@@ -25,5 +25,9 @@ variable "public_key_content" {
   description = "public key that will be used to create keypair in AWS."
 }
 
+variable "private_key" {
+  description = "private key required to connect to hosts through ansible"
+}
+
 
  
