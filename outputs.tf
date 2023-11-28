@@ -11,7 +11,7 @@ output "bastion_host_ip" {
 }
 
 output "swarm_manager_ip" {
-  value = aws_instance.swarm-manager.private_ip
+  value = aws_instance.swarm-manager[*].private_ip
 }
 
 output "swarm_workers_ip" {
