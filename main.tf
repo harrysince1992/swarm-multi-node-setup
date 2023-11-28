@@ -23,3 +23,15 @@ module "module-vpc-3tier" {
   REGION                     = var.REGION
 }
 
+# Public key imported from user
+
+resource "local_file" "pub_key" {
+  content = var.public_key_content
+  filename = "${var.app}-public-key-${terraform.workspace}"
+}
+
+# Import public key in AWS as a keypair
+resource "aws_key_pair" "keypair" {
+  public_key = local_file.pub_key.content
+}
+

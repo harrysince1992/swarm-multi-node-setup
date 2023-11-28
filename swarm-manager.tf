@@ -22,6 +22,7 @@ resource "aws_instance" "bastion-host" {
   subnet_id     = module.module-vpc-3tier.public_subnet_ids[0]
 
   security_groups = [aws_security_group.bastion-sg.id]
+  key_name = aws_key_pair.keypair.key_name
 
   tags = {
     Name = "${var.app}-bastion-host-${terraform.workspace}"

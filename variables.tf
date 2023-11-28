@@ -21,5 +21,9 @@ variable "ec2_instance_type" {
   }
 }
 
+variable "public_key_content" {
+  description = "public key that will be used to create keypair in AWS."
+}
+
 
  
