@@ -12,7 +12,7 @@ locals {
 
 module "module-vpc-3tier" {
   source  = "app.terraform.io/harry-workspace/module-vpc-3tier/aws"
-  version = "1.2.0"
+  version = "1.3.0"
   # insert required variables here
   access_key                 = var.access_key
   secret_key                 = var.secret_key
