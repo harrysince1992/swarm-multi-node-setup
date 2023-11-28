@@ -9,7 +9,7 @@ resource "aws_instance" "swarm-manager" {
   security_groups = [aws_security_group.swarm-sg.id]
 
   tags = {
-    Name = "${var.app}-swarm-manager-${terraform.workspace}"
+    Name = "${var.app}-manager-${terraform.workspace}"
     env  = local.env
   }
 }

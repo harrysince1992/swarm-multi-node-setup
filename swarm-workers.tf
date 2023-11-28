@@ -8,7 +8,7 @@ resource "aws_instance" "worker" {
   subnet_id       = local.subnets_dev[count.index]
   security_groups = [aws_security_group.swarm-sg.id]
   tags = {
-    Name = "${var.app}-swarm-worker-${count.index + 1}-${terraform.workspace}"
+    Name = "${var.app}-worker-${count.index + 1}-${terraform.workspace}"
     env  = local.env
   }
 
