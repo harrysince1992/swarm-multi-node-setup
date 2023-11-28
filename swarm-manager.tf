@@ -33,8 +33,8 @@ resource "aws_instance" "bastion-host" {
   }
 
   provisioner "file" {
-    source = "${path.module}/swarm-inventory.ini"
-    destination = "/home/ubuntu/swarm-inventory.ini"
+    source = "${path.module}/${local_file.inventory.filename}"
+    destination = "/home/ubuntu/${local_file.inventory.filename}"
   }
 
   tags = {
@@ -57,5 +57,5 @@ resource "local_file" "inventory" {
   ${aws_instance.worker[0].private_ip}
   ${aws_instance.worker[1].private_ip}
   EOF 
-  depends_on = [ aws_instance.bastion-host ]
+
 }
