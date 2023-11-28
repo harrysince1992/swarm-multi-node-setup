@@ -26,6 +26,7 @@ module "module-vpc-3tier" {
 # Public key imported from user
 # Import public key in AWS as a keypair
 resource "aws_key_pair" "keypair" {
-  public_key = var.public_key_content
+  key_name = join("-", var.app, terraform.workspace, "key")
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCi105nXh5rmPStRLqzs8NI0f7F6Wuhw9sUCrE5rmn2TDSdU+7yqSQbV61VGWRLSO//8N4OIwDC068AeHeBk8FmBRtcVrXA2aGyRPtuopRFCAebGMUsKzDFbhU3ArbPr8veaiz4b0TSg1ZHKuBufR+yxSrE3W1HyB4ZuikI27e8+YRnhdgEfYMYwBjx1CzQ3eivWSEJW4N5Dpm2h5Kb3u3jy5MsbOIli35Mn/CGuGLKQp"
 }
 
