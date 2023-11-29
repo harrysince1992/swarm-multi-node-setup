@@ -49,9 +49,9 @@ resource "aws_instance" "bastion-host" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod 400 /home/ubuntu/swarm-key.pem",
-      "export ANSIBLE_HOST_KEY_CHECKING=False",
-      "ansible-playbook -i /home/ubuntu/${local_file.inventory.filename} --private-key /home/ubuntu/swarm-key.pem /home/ubuntu/${local_file.swarm-playbook.filename}"
+      "chmod 400 /home/ubuntu/swarm-key.pem"
+      # "export ANSIBLE_HOST_KEY_CHECKING=False",
+      # "ansible-playbook -i /home/ubuntu/${local_file.inventory.filename} --private-key /home/ubuntu/swarm-key.pem /home/ubuntu/${local_file.swarm-playbook.filename}"
     ]
   }
 
