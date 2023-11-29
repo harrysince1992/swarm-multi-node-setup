@@ -37,25 +37,26 @@ resource "aws_instance" "bastion-host" {
     destination = "/home/ubuntu/${local_file.inventory.filename}"
   }
 
+  provisioner "file" {
+    content = var.private_key
+    destination = "/home/ubuntu/swarm-key.pem"
+  }
+
+  provisioner "file" {
+    content = file("${path.module}/${local_file.swarm-playbook.filename}")
+    destination = "/home/ubuntu/${local_file.swarm-playbook.filename}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 400 /home/ubuntu/swarm-key.pem",
+      "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i /home/ubuntu/${local_file.inventory.filename} --private-key /home/ubuntu/swarm-key.pem /home/ubuntu/${local_file.swarm-playbook.filename}"
+    ]
+  }
+
   tags = {
     Name = "${var.app}-bastion-host-${terraform.workspace}"
     env  = local.env
   }
-
-}
-
-# Ansible inventory file to create for swarm manager and worker nodes
-resource "local_file" "inventory" {
-  filename = "swarm-inventory.ini"
-  content = <<EOF
-  [swarm_hosts:children]
-  swarm_manager
-  swarm_workers
-  [swarm_manager]
-  ${aws_instance.swarm-manager[0].private_ip}
-  [swarm_workers]
-  ${aws_instance.worker[0].private_ip}
-  ${aws_instance.worker[1].private_ip}
-  EOF 
 
 }
