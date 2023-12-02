@@ -57,7 +57,7 @@ resource "aws_instance" "bastion-host" {
       "chmod 400 /home/ubuntu/swarm-key.pem",
       "export ANSIBLE_HOST_KEY_CHECKING=False",
       "sleep 120",
-      "/usr/bin/ansible-playbook -i /home/ubuntu/${local_file.inventory.filename} --private-key /home/ubuntu/swarm-key.pem /home/ubuntu/"
+      "/usr/bin/ansible-playbook -i /home/ubuntu/${local_file.inventory.filename} --private-key /home/ubuntu/swarm-key.pem /home/ubuntu/swarm-playbook.yml"
     ]
   }
 
