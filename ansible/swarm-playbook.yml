@@ -1,0 +1,49 @@
+---
+- name: Setup hostnames and local dns
+  hosts: all_hosts
+  become: true
+  vars_files:
+    - swarm_vars.yml
+  tasks:
+    - name: setup hostname for {{ inventory_hostname }}
+      hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: add entries in /etc/hosts file
+      lineinfile:
+        line: "{{ item.ip }} {{ item.name }}"
+        path: /etc/hosts
+      loop: "{{ swarm_hosts_var }}"
+- name: setup swarm manager and initialize swarm
+  hosts: swarm-manager
+  become: true
+  tasks:
+    - name: check if docker is installed and running
+      command: "docker version --format '{{ '{{' }} .Server.Version {{ '}}' }}'"
+      register: docker_version
+
+    - name: check if swarm already initialized
+      command: "docker info --format '{{ '{{' }} .Swarm {{ '}}' }}'"
+      register: swarm_status
+
+    - name: initialize swarm manager
+      command: "docker swarm init --advertise-addr {{ ansible_ssh_host }}"
+      when: swarm_status.stdout.find('active') == -1
+
+    - name: save worker token
+      command: "docker swarm join-token --quiet worker"
+      register: swarm_token
+
+- name: setup swarm workers to join swarm cluster
+  hosts: swarm_workers
+  become: true
+  vars_files:
+    - swarm_vars.yml
+  tasks:
+    - name: check if node already part of the swarm cluster
+      command: "docker info --format '{{ '{{' }} .Swarm {{ '}}' }}'"
+      register: swarm_status
+
+    - name: join swarm cluster
+      command: "docker swarm join --token {{ hostvars['swarm-manager']['swarm_token'].stdout }} {{ swarm_hosts_var[0].ip }}:2377"
+      when: swarm_status.stdout.find('active') == -1
