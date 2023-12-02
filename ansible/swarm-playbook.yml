@@ -2,6 +2,7 @@
 - name: Setup hostnames and local dns
   hosts: all_hosts
   become: true
+  gather_facts: no
   vars_files:
     - swarm_vars.yml
   tasks:
@@ -17,6 +18,7 @@
 - name: setup swarm manager and initialize swarm
   hosts: swarm-manager
   become: true
+  gather_facts: no
   tasks:
     - name: check if docker is installed and running
       command: "docker version --format '{{ '{{' }} .Server.Version {{ '}}' }}'"
@@ -36,6 +38,7 @@
 - name: setup swarm workers to join swarm cluster
   hosts: swarm_workers
   become: true
+  gather_facts: no
   vars_files:
     - swarm_vars.yml
   tasks:
