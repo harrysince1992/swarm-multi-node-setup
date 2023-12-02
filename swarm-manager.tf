@@ -44,7 +44,7 @@ resource "aws_instance" "bastion-host" {
 
   provisioner "file" {
     content = file("${path.module}/ansible/swarm-playbook.yml")
-    destination = "/home/ubuntu/ansible/swarm-playbook.yml"
+    destination = "/home/ubuntu/swarm-playbook.yml"
   }
 
   provisioner "file" {
