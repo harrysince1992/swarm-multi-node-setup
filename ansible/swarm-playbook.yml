@@ -22,13 +22,12 @@
       command: "docker version --format '{{ '{{' }} .Server.Version {{ '}}' }}'"
       register: docker_version
 
-    - name: check if swarm already initialized
-      command: "docker info --format '{{ '{{' }} .Swarm {{ '}}' }}'"
-      register: swarm_status
-
+    # - name: check if swarm already initialized
+    #   command: "docker info --format '{{ '{{' }} .Swarm {{ '}}' }}'"
+    #   register: swarm_status
     - name: initialize swarm manager
       command: "docker swarm init --advertise-addr {{ ansible_ssh_host }}"
-      when: swarm_status.stdout.find('active') == -1
+      # when: swarm_status.stdout.find('active') == -1
 
     - name: save worker token
       command: "docker swarm join-token --quiet worker"
@@ -40,10 +39,10 @@
   vars_files:
     - swarm_vars.yml
   tasks:
-    - name: check if node already part of the swarm cluster
-      command: "docker info --format '{{ '{{' }} .Swarm {{ '}}' }}'"
-      register: swarm_status
+    # - name: check if node already part of the swarm cluster
+    #   command: "docker info --format '{{ '{{' }} .Swarm {{ '}}' }}'"
+    #   register: swarm_status
 
     - name: join swarm cluster
       command: "docker swarm join --token {{ hostvars['swarm-manager']['swarm_token'].stdout }} {{ swarm_hosts_var[0].ip }}:2377"
-      when: swarm_status.stdout.find('active') == -1
+      # when: swarm_status.stdout.find('active') == -1
