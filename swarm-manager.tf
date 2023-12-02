@@ -42,17 +42,22 @@ resource "aws_instance" "bastion-host" {
     destination = "/home/ubuntu/swarm-key.pem"
   }
 
+  # provisioner "file" {
+  #   content = file("${path.module}/${local_file.swarm-playbook.filename}")
+  #   destination = "/home/ubuntu/${local_file.swarm-playbook.filename}"
+  # }
+
   provisioner "file" {
-    content = file("${path.module}/${local_file.swarm-playbook.filename}")
-    destination = "/home/ubuntu/${local_file.swarm-playbook.filename}"
+    source = "${path.module}/${local_file.swarm_vars.filename}"
+    destination = "/home/ubuntu/${local_file.swarm_vars.filename}"
   }
 
   provisioner "remote-exec" {
     inline = [
       "chmod 400 /home/ubuntu/swarm-key.pem",
       "export ANSIBLE_HOST_KEY_CHECKING=False",
-      "sleep 120",
-      "/usr/bin/ansible-playbook -i /home/ubuntu/${local_file.inventory.filename} --private-key /home/ubuntu/swarm-key.pem /home/ubuntu/${local_file.swarm-playbook.filename}"
+      # "sleep 120",
+      # "/usr/bin/ansible-playbook -i /home/ubuntu/${local_file.inventory.filename} --private-key /home/ubuntu/swarm-key.pem --extra-vars /home/ubuntu/swarm_vars /home/ubuntu/${local_file.swarm-playbook.filename}"
     ]
   }
 
